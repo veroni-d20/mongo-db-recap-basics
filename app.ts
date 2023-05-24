@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 
 const port = 3000;
 const app = express();
+app.use(express.json());
 
 let db;
 
@@ -53,6 +54,16 @@ app.get("/books/:id", async (req, res) => {
     } else {
       res.status(400).json({ msg: "Invalid id" });
     }
+  } catch (err) {
+    res.status(500).json({ msg: err });
+  }
+});
+
+app.post("/books", async (req, res) => {
+  try {
+    const bookdetails = req.body;
+    let book = await db.collection("books").insertOne(bookdetails);
+    res.status(200).json(book);
   } catch (err) {
     res.status(500).json({ msg: err });
   }
